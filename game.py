@@ -173,7 +173,7 @@ while not command == "Quit":
         for i, item in enumerate(room_items):
             for thing in player_inv:
                 if thing == item.name:
-                    gone = player.get_current_room().remove_item()
+                    gone = player.get_current_room().remove_item(i)
                     print(
                         Fore.RED + f"The {gone.name} was removed from the room.")
 
