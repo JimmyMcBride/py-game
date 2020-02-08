@@ -5,17 +5,21 @@ from room import Room
 from item import Item
 from colorama import Fore
 
+
 class Player:
     def __init__(self, current_room, items=[]):
         self.current_room = current_room
         self.items = items
 
     def __str__(self):
-        player_string = Fore.RED + f"Current Room: {self.current_room}\n\n" + Fore.LIGHTRED_EX + "Held Items:\n" + Fore.RESET
+        player_string = Fore.GREEN + \
+            f"Current Room: {self.current_room}\n\n" + \
+            Fore.LIGHTRED_EX + "Held Items:\n" + Fore.RESET
 
         i = 1
         for item in self.items:
-            player_string += f"Item {i}: {item}\n"
+            player_string += f"Item {i}: " + \
+                Fore.YELLOW + f"{item}\n" + Fore.RESET
             i += 1
 
         return player_string
@@ -51,13 +55,13 @@ class Player:
             print("You went nowhere, dummy.\n")
 
     def grab_item(self, item_number):
-        grabbed_item = self.current_room.get_items()[item_number - 1]
+        grabbed_item = self.current_room.get_items()[item_number]
         self.items.append(grabbed_item)
         return grabbed_item
 
     def drop_item(self, item_number):
-        dropped_item = self.items[item_number - 1]
-        del self.items[item_number - 1]
+        dropped_item = self.items[item_number]
+        del self.items[item_number]
         return dropped_item
 
     def found_treasure(self):
