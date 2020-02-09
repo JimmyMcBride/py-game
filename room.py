@@ -27,10 +27,9 @@ class Room:
     def get_items(self):
         return self.items
 
-    def add_item(self, item_number):
-        grabbed_item = self[item_number]
-        self.items.append(grabbed_item)
-        return grabbed_item
+    def add_item(self, item):
+        self.items.append(item)
+        return item
 
     def remove_item(self, item):
         self.items.remove(item)

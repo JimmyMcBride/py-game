@@ -4,6 +4,7 @@ from player import Player
 from room import Room
 from colorama import Fore
 import os
+import copy
 
 # Declare all the rooms
 
@@ -125,18 +126,22 @@ while not command == "Quit":
 
     if command["direction"] == "Go north":
         player.move_n()
+        clear()
         print(player)
 
     elif command["direction"] == "Go south":
         player.move_s()
+        clear()
         print(player)
 
     elif command["direction"] == "Go east":
         player.move_e()
+        clear()
         print(player)
 
     elif command["direction"] == "Go west":
         player.move_w()
+        clear()
         print(player)
 
     elif command["direction"] == "Quit":
@@ -166,22 +171,31 @@ while not command == "Quit":
                     grabbed_item = player.grab_item(i)
                     player_inv.append(grabbed_item.name)
 
-                    print(Fore.LIGHTGREEN_EX +
-                          f"Player grabbed the {grabbed_item.name}.")
+                    # print(Fore.LIGHTGREEN_EX +
+                    #       f"Player grabbed the {grabbed_item.name}.")
 
-        t = 0
+        added = []
         for item in player.get_items():
-            gone = player.get_current_room().remove_item(item)
-            print(
-                Fore.RED + f"The {gone.name} was removed from the room.")
+            for other_item in player.get_current_room().get_items():
+                if item == other_item:
+                    gone = player.get_current_room().remove_item(item)
+                    added.append(item.name)
+                    print(
+                        Fore.RED + f"The {gone.name} was removed from the room.")
+        clear()
+        for item in added:
+            print(Fore.LIGHTGREEN_EX +
+                  f"Player grabbed the {item}.")
+        print(player)
 
     elif command["direction"] == "Drop item":
-        room_items = player.get_items()
+        room_items = player.get_current_room().get_items()
+        player_items = list(player.get_items())
 
         choice_arr = []
 
-        for i in range(len(room_items)):
-            choice_arr.append({"name": f"{room_items[i].name}"})
+        for i in range(len(player_items)):
+            choice_arr.append({"name": f"{player_items[i].name}"})
 
         dropped_items = prompt({
             "type": "checkbox",
@@ -190,12 +204,26 @@ while not command == "Quit":
             "choices": choice_arr
         })['item']
 
-        for index, item in enumerate(room_items):
+        removed = []
+
+        for item in player_items:
+            # print(f"player_items: {item}, index: {i}")
             for inv in dropped_items:
                 if item.name == inv:
-                    dropped_item = player.drop_item(index)
-                    print(
-                        Fore.RED + f"Player dropped the {dropped_item.name}.")
+                    dropped_item = player.drop_item(item)
+                    player.get_current_room().add_item(item)
+                    removed.append(item.name)
+                    # print(
+                    #     Fore.RED + f"Player dropped the {dropped_item.name}.")
+                    # i -= 1
+        # for item in something:
+            # player.get_current_room().add_item(item)
+            # pass
+        clear()
+        for item in removed:
+            print(
+                Fore.RED + f"Player dropped the {item}.")
+        print(player)
 
     elif command["direction"] == "Quit":
         print("Thanks for playing! 🎮")
