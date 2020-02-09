@@ -168,14 +168,12 @@ while not command == "Quit":
 
                     print(Fore.LIGHTGREEN_EX +
                           f"Player grabbed the {grabbed_item.name}.")
-                    # return grabbed_item
 
-        for i, item in enumerate(room_items):
-            for thing in player_inv:
-                if thing == item.name:
-                    gone = player.get_current_room().remove_item(i)
-                    print(
-                        Fore.RED + f"The {gone.name} was removed from the room.")
+        t = 0
+        for item in player.get_items():
+            gone = player.get_current_room().remove_item(item)
+            print(
+                Fore.RED + f"The {gone.name} was removed from the room.")
 
     elif command["direction"] == "Drop item":
         room_items = player.get_items()
@@ -192,10 +190,10 @@ while not command == "Quit":
             "choices": choice_arr
         })['item']
 
-        for u, item in enumerate(room_items):
+        for index, item in enumerate(room_items):
             for inv in dropped_items:
                 if item.name == inv:
-                    dropped_item = player.drop_item(u)
+                    dropped_item = player.drop_item(index)
                     print(
                         Fore.RED + f"Player dropped the {dropped_item.name}.")
 

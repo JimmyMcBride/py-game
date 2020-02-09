@@ -59,10 +59,9 @@ class Player:
         self.items.append(grabbed_item)
         return grabbed_item
 
-    def drop_item(self, item_number):
-        dropped_item = self.items[item_number]
-        del self.items[item_number]
-        return dropped_item
+    def drop_item(self, item):
+        self.items.remove(item)
+        return item
 
     def found_treasure(self):
         return self.current_room.name == "Treasure Chamber"
