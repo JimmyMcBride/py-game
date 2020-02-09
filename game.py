@@ -62,22 +62,21 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
-#
-# Main
-#
+'''
+    Main
 
-# Make a new player object that is currently in the 'outside' room.
+    Make a new player object that is currently in the 'outside' room.
 
-# Write a loop that:
-#
-# * Prints the current room name
-# * Prints the current description (the textwrap module might be useful here).
-# * Waits for user input and decides what to do.
-#
-# If the user enters a cardinal direction, attempt to move to the room there.  # Print an error message if the movement isn't allowed.
-#
-# If the user enters "q", quit the game.
+    Write a loop that:
 
+    * Prints the current room name
+    * Prints the current description (the textwrap module might be useful here).
+    * Waits for user input and decides what to do.
+
+    If the user enters a cardinal direction, attempt to move to the room there.  # Print an error message if the movement isn't allowed.
+
+    If the user enters "q", quit the game.
+'''
 
 player = Player(room['outside'])
 command = ""
@@ -99,133 +98,147 @@ print(player.get_current_room())
     if 2 it's a command to pick up items
 '''
 
-init_direction = [
+main_menu = [
     {
         "type": "list",
-        "name": "direction",
-        "message": "Which direction would you like to go?",
-        "choices": ["Go north", "Go south", "Go east", "Go west", "Grab item", "Quit"]
+        "name": "menu",
+        "message": "What action would you like to take?",
+        "choices": ["Move", "Interact", "Quit"]
     }
 ]
 
-inv_direction = [
+direction = [
     {
         "type": "list",
         "name": "direction",
         "message": "Which direction would you like to go?",
-        "choices": ["Go north", "Go south", "Go east", "Go west", "Grab item", "Drop item", "Quit"]
+        "choices": ["Go north", "Go south", "Go east", "Go west", "Back to menu"]
+    }
+]
+
+interact = [
+    {
+        "type": "list",
+        "name": "interact",
+        "message": "Which direction would you like to go?",
+        "choices": ["Grab item", "Drop item", "Back to menu"]
     }
 ]
 
 while not command == "Quit":
 
-    if not player.get_items():
-        command = prompt(init_direction)
-    else:
-        command = prompt(inv_direction)
+    command = prompt(main_menu)
 
-    if command["direction"] == "Go north":
-        player.move_n()
-        clear()
-        print(player)
+    if command["menu"] == "Move":
+        move_com = prompt(direction)
+        if move_com["direction"] == "Go north":
+            player.move_n()
+            clear()
+            print(player)
 
-    elif command["direction"] == "Go south":
-        player.move_s()
-        clear()
-        print(player)
+        elif move_com["direction"] == "Go south":
+            player.move_s()
+            clear()
+            print(player)
 
-    elif command["direction"] == "Go east":
-        player.move_e()
-        clear()
-        print(player)
+        elif move_com["direction"] == "Go east":
+            player.move_e()
+            clear()
+            print(player)
 
-    elif command["direction"] == "Go west":
-        player.move_w()
-        clear()
-        print(player)
+        elif move_com["direction"] == "Go west":
+            player.move_w()
+            clear()
+            print(player)
 
-    elif command["direction"] == "Quit":
-        print("Thanks for playing! 🎮")
-        command = "Quit"
+        else:
+            clear()
+            print(player)
 
-    elif command["direction"] == "Grab item":
-        room_items = player.get_current_room().get_items()
+    elif command["menu"] == "Interact":
+        interact_com = prompt(interact)
 
-        choice_arr = []
-
-        for i in range(len(room_items)):
-            choice_arr.append({"name": f"{room_items[i].name}"})
-
-        picked_up = prompt({
-            "type": "checkbox",
-            "name": "item",
-            "message": "Which item(s) would you like to pick up?",
-            "choices": choice_arr
-        })['item']
-
-        player_inv = []
-
-        for i, item in enumerate(room_items):
-            for inv in picked_up:
-                if item.name == inv:
-                    grabbed_item = player.grab_item(i)
-                    player_inv.append(grabbed_item.name)
-
-                    # print(Fore.LIGHTGREEN_EX +
-                    #       f"Player grabbed the {grabbed_item.name}.")
-
-        added = []
-        for item in player.get_items():
-            for other_item in player.get_current_room().get_items():
-                if item == other_item:
-                    gone = player.get_current_room().remove_item(item)
-                    added.append(item.name)
-                    print(
-                        Fore.RED + f"The {gone.name} was removed from the room.")
-        clear()
-        for item in added:
-            print(Fore.LIGHTGREEN_EX +
-                  f"Player grabbed the {item}.")
-        print(player)
-
-    elif command["direction"] == "Drop item":
         room_items = player.get_current_room().get_items()
         player_items = list(player.get_items())
 
-        choice_arr = []
+        if interact_com["interact"] == "Grab item":
+            if len(room_items) >= 1:
 
-        for i in range(len(player_items)):
-            choice_arr.append({"name": f"{player_items[i].name}"})
+                choice_arr = []
 
-        dropped_items = prompt({
-            "type": "checkbox",
-            "name": "item",
-            "message": "Which item(s) would you like to pick up?",
-            "choices": choice_arr
-        })['item']
+                for i in range(len(room_items)):
+                    choice_arr.append({"name": f"{room_items[i].name}"})
 
-        removed = []
+                picked_up = prompt({
+                    "type": "checkbox",
+                    "name": "item",
+                    "message": "Which item(s) would you like to pick up?",
+                    "choices": choice_arr
+                })['item']
 
-        for item in player_items:
-            # print(f"player_items: {item}, index: {i}")
-            for inv in dropped_items:
-                if item.name == inv:
-                    dropped_item = player.drop_item(item)
-                    player.get_current_room().add_item(item)
-                    removed.append(item.name)
-                    # print(
-                    #     Fore.RED + f"Player dropped the {dropped_item.name}.")
-                    # i -= 1
-        # for item in something:
-            # player.get_current_room().add_item(item)
-            # pass
-        clear()
-        for item in removed:
-            print(
-                Fore.RED + f"Player dropped the {item}.")
-        print(player)
+                player_inv = []
 
-    elif command["direction"] == "Quit":
+                for i, item in enumerate(room_items):
+                    for inv in picked_up:
+                        if item.name == inv:
+                            grabbed_item = player.grab_item(i)
+                            player_inv.append(grabbed_item.name)
+
+                added = []
+                for item in player.get_items():
+                    for other_item in player.get_current_room().get_items():
+                        if item == other_item:
+                            gone = player.get_current_room().remove_item(item)
+                            added.append(item.name)
+                            print(
+                                Fore.RED + f"The {gone.name} was removed from the room.")
+                clear()
+                print(player)
+                for item in added:
+                    print(Fore.LIGHTGREEN_EX +
+                          f"Player grabbed the {item}.")
+            else:
+                clear()
+                print(player)
+                print(Fore.RED + "There are currently no items in the room. 🤷‍♂")
+
+        elif interact_com["interact"] == "Drop item":
+            if len(player_items) >= 1:
+
+                choice_arr = []
+
+                for i in range(len(player_items)):
+                    choice_arr.append({"name": f"{player_items[i].name}"})
+
+                dropped_items = prompt({
+                    "type": "checkbox",
+                    "name": "item",
+                    "message": "Which item(s) would you like to pick up?",
+                    "choices": choice_arr
+                })['item']
+
+                removed = []
+
+                for item in player_items:
+                    for inv in dropped_items:
+                        if item.name == inv:
+                            dropped_item = player.drop_item(item)
+                            player.get_current_room().add_item(item)
+                            removed.append(item.name)
+                clear()
+                print(player)
+                for item in removed:
+                    print(
+                        Fore.RED + f"Player dropped the {item}.")
+            else:
+                clear()
+                print(player)
+                print(Fore.RED + "There are currently no items in your inventory. 🤷‍♂")
+        else:
+            clear()
+            print(player)
+
+    elif command["menu"] == "Quit":
         print("Thanks for playing! 🎮")
         command = "Quit"
 
