@@ -241,7 +241,3 @@ while not command == "Quit":
     elif command["menu"] == "Quit":
         print("Thanks for playing! 🎮")
         command = "Quit"
-
-    else:
-        print(command)
-        print("Not a valid command. 🤷‍")
