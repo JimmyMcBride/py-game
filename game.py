@@ -73,7 +73,8 @@ room['treasure'].s_to = room['narrow']
     * Prints the current description (the textwrap module might be useful here).
     * Waits for user input and decides what to do.
 
-    If the user enters a cardinal direction, attempt to move to the room there.  # Print an error message if the movement isn't allowed.
+    # Print an error message if the movement isn't allowed.
+    If the user enters a cardinal direction, attempt to move to the room there.
 
     If the user enters "q", quit the game.
 '''
@@ -132,25 +133,28 @@ while not command == "Quit":
     if command["menu"] == "Move":
         move_com = prompt(direction)
         if move_com["direction"] == "Go north":
-            player.move_n()
+            direct = player.move_n()
             clear()
             print(player)
+            print(direct)
 
         elif move_com["direction"] == "Go south":
-            player.move_s()
+            direct = player.move_s()
             clear()
             print(player)
+            print(direct)
 
         elif move_com["direction"] == "Go east":
-            player.move_e()
+            direct = player.move_e()
             clear()
             print(player)
+            print(direct)
 
         elif move_com["direction"] == "Go west":
-            player.move_w()
+            direct = player.move_w()
             clear()
             print(player)
-
+            print(direct)
         else:
             clear()
             print(player)

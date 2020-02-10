@@ -33,26 +33,30 @@ class Player:
     def move_n(self):
         if hasattr(self.current_room, 'n_to'):
             self.current_room = self.current_room.n_to
+            return Fore.GREEN + f"Player has moved to the {self.current_room.name}"
         else:
-            print("You went nowhere, dummy.\n")
+            return Fore.RED + "You went nowhere dummy! 🤣"
 
     def move_s(self):
         if hasattr(self.current_room, 's_to'):
             self.current_room = self.current_room.s_to
+            return Fore.GREEN + f"Player has moved to the {self.current_room.s_to.name}"
         else:
-            print("You went nowhere, dummy.\n")
+            return Fore.RED + "You went nowhere dummy! 🤣"
 
     def move_e(self):
         if hasattr(self.current_room, 'e_to'):
             self.current_room = self.current_room.e_to
+            return Fore.GREEN + f"Player has moved to the {self.current_room.name}"
         else:
-            print("You went nowhere, dummy.\n")
+            return Fore.RED + "You went nowhere dummy! 🤣"
 
     def move_w(self):
         if hasattr(self.current_room, 'w_to'):
             self.current_room = self.current_room.w_to
+            return Fore.GREEN + f"Player has moved to the {self.current_room.name}"
         else:
-            print("You went nowhere, dummy.\n")
+            return Fore.RED + "You went nowhere dummy! 🤣"
 
     def grab_item(self, item_number):
         grabbed_item = self.current_room.get_items()[item_number]
